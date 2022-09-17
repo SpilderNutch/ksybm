@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksy.bm.detector.mapper.SmsMapper">
+
+    <resultMap type="Sms" id="SmsResult">
+        <result property="ID"    column="ID"    />
+        <result property="ADDRESS"    column="ADDRESS"    />
+        <result property="sendTime"    column="SEND_TIME"    />
+        <result property="BODY"    column="BODY"    />
+        <result property="sendType"    column="SEND_TYPE"    />
+        <result property="dealFlag"    column="DEAL_FLAG"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="dealBy"    column="DEAL_BY"    />
+        <result property="dealTime"    column="DEAL_TIME"    />
+    </resultMap>
+
+    <sql id="selectSmsVo">
+        select ID, ADDRESS, SEND_TIME, BODY, SEND_TYPE, DEAL_FLAG, CREATED_BY, CREATED_TIME, DEAL_BY, DEAL_TIME from sms
+    </sql>
+
+    <select id="selectSmsList" parameterType="Sms" resultMap="SmsResult">
+        <include refid="selectSmsVo"/>
+        <where>
+            <if test="ADDRESS != null  and ADDRESS != ''"> and ADDRESS = #{ADDRESS}</if>
+            <if test="sendTime != null "> and SEND_TIME = #{sendTime}</if>
+            <if test="BODY != null  and BODY != ''"> and BODY = #{BODY}</if>
+            <if test="sendType != null  and sendType != ''"> and SEND_TYPE = #{sendType}</if>
+            <if test="dealFlag != null  and dealFlag != ''"> and DEAL_FLAG = #{dealFlag}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="dealBy != null  and dealBy != ''"> and DEAL_BY = #{dealBy}</if>
+            <if test="dealTime != null "> and DEAL_TIME = #{dealTime}</if>
+        </where>
+    </select>
+
+    <select id="selectSmsByID" parameterType="String" resultMap="SmsResult">
+        <include refid="selectSmsVo"/>
+        where ID = #{ID}
+    </select>
+
+    <insert id="insertSms" parameterType="Sms">
+        insert into sms
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ID != null">ID,</if>
+            <if test="ADDRESS != null">ADDRESS,</if>
+            <if test="sendTime != null">SEND_TIME,</if>
+            <if test="BODY != null">BODY,</if>
+            <if test="sendType != null">SEND_TYPE,</if>
+            <if test="dealFlag != null">DEAL_FLAG,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="dealBy != null">DEAL_BY,</if>
+            <if test="dealTime != null">DEAL_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ID != null">#{ID},</if>
+            <if test="ADDRESS != null">#{ADDRESS},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="BODY != null">#{BODY},</if>
+            <if test="sendType != null">#{sendType},</if>
+            <if test="dealFlag != null">#{dealFlag},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="dealBy != null">#{dealBy},</if>
+            <if test="dealTime != null">#{dealTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSms" parameterType="Sms">
+        update sms
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ADDRESS != null">ADDRESS = #{ADDRESS},</if>
+            <if test="sendTime != null">SEND_TIME = #{sendTime},</if>
+            <if test="BODY != null">BODY = #{BODY},</if>
+            <if test="sendType != null">SEND_TYPE = #{sendType},</if>
+            <if test="dealFlag != null">DEAL_FLAG = #{dealFlag},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="dealBy != null">DEAL_BY = #{dealBy},</if>
+            <if test="dealTime != null">DEAL_TIME = #{dealTime},</if>
+        </trim>
+        where ID = #{ID}
+    </update>
+
+    <delete id="deleteSmsByID" parameterType="String">
+        delete from sms where ID = #{ID}
+    </delete>
+
+    <delete id="deleteSmsByIDs" parameterType="String">
+        delete from sms where ID in
+        <foreach item="ID" collection="array" open="(" separator="," close=")">
+            #{ID}
+        </foreach>
+    </delete>
+
+</mapper>

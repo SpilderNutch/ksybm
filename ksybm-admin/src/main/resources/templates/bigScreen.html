@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+		<title>安监城管一体化</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/app.css"/>
+	</head>
+
+	<body class="bg01">
+
+		<header class="header">
+			<h3>安监城管一体化</h3>
+		</header>
+
+		<div class="wrapper">
+			<div class="container-fluid">
+				<div class="row fill-h">
+					<div class="col-lg-3 fill-h">
+						<div class="xpanel-wrapper xpanel-wrapper-2">
+							<div class="xpanel">
+								<!-- 三种类型报警数量 -->
+								<div class="fill-h" id="barMap">
+
+								</div>
+							</div>
+						</div>
+						<div class="xpanel-wrapper xpanel-wrapper-2">
+							<div class="xpanel">
+								<!-- 饼图 报警比例 -->
+								<div class="fill-h" id="pieMap">
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 fill-h">
+						<div class="xpanel-wrapper xpanel-wrapper-1">
+							<div class="xpanel">
+								<!-- 地图散点 -->
+								<div class="fill-h" id="scatterMap">
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 fill-h">
+						<div class="xpanel-wrapper xpanel-wrapper-6">
+							<div class="xpanel">
+								<div style="height: 130px;" >
+									<div class="col-lg-8">
+										<img src="/img/screen/laji.png" style="height: 130px;width: 100%;" >
+									</div>
+									<div class="col-lg-4">
+										<div class="row" style="color: white; margin-top: 20px;">
+											08/27 10:11
+										</div>
+										<div class="row" style="color: white; margin-top: 20px;">
+											白马社区水库旁
+										</div>
+									</div>
+								</div>
+								<div style="height: 130px; margin-top: 10px;" >
+									<div class="col-lg-8">
+										<img src="/img/screen/diaoyu.png" style="height: 130px;width: 100%;" >
+									</div>
+									<div class="col-lg-4">
+										<div class="row" style="color: white; margin-top: 20px;">
+											09/02 15:11
+										</div>
+										<div class="row" style="color: white; margin-top: 20px;">
+											暗明珠水库
+										</div>
+									</div>
+								</div>
+								<div style="height: 130px; margin-top: 10px;" >
+									<div class="col-lg-8">
+										<img src="/img/screen/huoqing.png" style="height: 130px;width: 100%;" >
+									</div>
+									<div class="col-lg-4">
+										<div class="row" style="color: white; margin-top: 20px;">
+											08/19 13:12
+										</div>
+										<div class="row" style="color: white; margin-top: 20px;">
+											白马火情
+										</div>
+									</div>
+								</div>
+								<div style="text-align: center;color: white;">
+									将滚动~
+								</div>
+							</div>
+
+						</div>
+						<div class="xpanel-wrapper xpanel-wrapper-4">
+							<div class="xpanel">
+								<table class="table" style="color: white;">
+									<tr>
+										<td>序号</td>
+										<td>时间</td>
+										<td>地点</td>
+										<td>类型</td>
+										<td>处理情况</td>
+									</tr>
+									<tr>
+										<td>1</td>
+										<td>2022-08-01</td>
+										<td>大冲水库</td>
+										<td>垂钓</td>
+										<td>已处理</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>2022-08-01</td>
+										<td>大冲水库</td>
+										<td>垂钓</td>
+										<td>已处理</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td>2022-08-01</td>
+										<td>大冲山</td>
+										<td>火情预警</td>
+										<td>已处理</td>
+									</tr>
+									<tr>
+										<td colspan="5">会滚动</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/echarts-3.8.5.min.js"></script>
+		<script type="text/javascript" src="js/echarts-map-world.js"></script>
+		<script type="text/javascript" src="js/echarts-map-china.js"></script>
+		<script type="text/javascript" src="js/echarts-china-provinces/jiangsu.js"></script>
+		<script type="text/javascript" src="js/echarts-china-cities/jiang1_su1_su1_zhou1.js"></script>
+		<script type="text/javascript" src="js/echarts-china-counties/jiang1su1_su1zhou1_kun1shan1shi4.js"></script>
+		<!--
+		<script src="http://api.tianditu.gov.cn/api?v=4.0&tk=3ca6520eb701d47d9bcb58380b23a1a5" type="text/javascript"></script>
+		-->
+		<script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=bLd16laNw4xHBbq8Ffjy5LuB1YQc1eKy&callback=loadBMap" type="text/javascript"></script>
+		<script type="text/javascript">
+			var map ;
+			var zoom = 7;
+			$(function() {
+
+				/******************* 天地图 ******************/
+				console.log('hello');
+
+				//loadBMap();
+
+				//loadTdt();
+				//一段时间发生的报警数
+				loadTypeNum();
+
+				//加载饼图
+				laodPieType();
+
+				/********** 浏览器窗口改变时，重置报表大小 ****************/
+				window.onresize = function() {
+
+				}
+			});
+
+			//加载百度地图
+			function loadBMap(){
+				var map = new BMapGL.Map('scatterMap');
+				map.centerAndZoom(new BMapGL.Point(112.794793, 28.236462), 10);
+				map.enableScrollWheelZoom();
+				//map.setMapType(BMAP_EARTH_MAP);      // 设置地图类型为地球模式
+				//map.setMapType(BMAP_SATELLITE_MAP);
+
+				var point = new BMapGL.Point(112.812377, 28.364517);
+				var myIcon = new BMapGL.Icon("/img/icon/camera-video.jpg",
+						new BMapGL.Size(20, 40));
+				// 创建标注对象并添加到地图
+				var marker = new BMapGL.Marker(point, {icon: myIcon});
+				map.addOverlay(marker);
+
+				marker.addEventListener('click',function(){
+					alert('摄像头被点击!');
+				})
+			}
+
+
+			//天地图，以白马街道办事处作为中心点
+			function loadTdt() {
+				map = new T.Map('scatterMap');
+				map.centerAndZoom(new T.LngLat(112.794793, 28.236462), 13);
+
+				//小石塘水库
+				var lngLat1 = new T.LngLat(112.812377, 28.364517)
+				//创建图片对象
+				var icon1 = new T.Icon({
+					iconUrl: "/img/icon/camera-video.jpg",
+					//iconUrl: "http://api.tianditu.gov.cn/img/map/markerA.png",
+					iconSize: new T.Point(19, 27),
+					iconAnchor: new T.Point(10, 25)
+				});
+				//创建标注对象
+				var marker1 = new T.Marker(lngLat1, {icon: icon1});
+				//向地图上添加标注
+				map.addOverLay(marker1);
+
+
+				//大冲水库
+				var lngLat2 = new T.LngLat(112.955935, 28.474027)
+				//创建图片对象
+				var icon2 = new T.Icon({
+					iconUrl: "/img/icon/camera-video.jpg",
+					//iconUrl: "http://api.tianditu.gov.cn/img/map/markerA.png",
+					iconSize: new T.Point(19, 27),
+					iconAnchor: new T.Point(10, 25)
+				});
+				//创建标注对象
+				var marker2 = new T.Marker(lngLat2, {icon: icon2});
+				//向地图上添加标注
+				map.addOverLay(marker2);
+
+				//神符塘水库
+				var lngLat3 = new T.LngLat(112.787442, 28.272303)
+				//创建图片对象
+				var icon3 = new T.Icon({
+					iconUrl: "/img/icon/camera-video.jpg",
+					//iconUrl: "http://api.tianditu.gov.cn/img/map/markerA.png",
+					iconSize: new T.Point(19, 27),
+					iconAnchor: new T.Point(10, 25)
+				});
+				//创建标注对象
+				var marker3 = new T.Marker(lngLat3, {icon: icon3});
+				//向地图上添加标注
+				map.addOverLay(marker3);
+
+
+				//暗珠塘水库
+				var lngLat4 = new T.LngLat(112.773123, 28.259926)
+				//创建图片对象
+				var icon4 = new T.Icon({
+					iconUrl: "/img/icon/camera-video.jpg",
+					//iconUrl: "http://api.tianditu.gov.cn/img/map/markerA.png",
+					iconSize: new T.Point(19, 27),
+					iconAnchor: new T.Point(10, 25)
+				});
+				//创建标注对象
+				var marker4 = new T.Marker(lngLat4, {icon: icon4});
+				//向地图上添加标注
+				map.addOverLay(marker4);
+
+
+			}
+
+			//一段时间发生的报警数
+			function loadTypeNum() {
+				// 基于准备好的dom，初始化echarts实例
+				var barMapChart = echarts.init(document.getElementById('barMap'));
+
+				// 指定图表的配置项和数据
+				option = {
+					tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+							type: 'cross',
+							crossStyle: {
+								color: '#999'
+							}
+						}
+					},
+					toolbox: {
+						feature: {
+							dataView: { show: true, readOnly: false },
+							magicType: { show: true, type: ['line', 'bar'] },
+							restore: { show: true },
+							saveAsImage: { show: true }
+						}
+					},
+					legend: {
+						data: ['Evaporation', 'Precipitation', 'Temperature']
+					},
+					xAxis: [
+						{
+							type: 'category',
+							data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+							axisPointer: {
+								type: 'shadow'
+							},
+							axisLabel: {
+								fontSize: 12,
+								color: "#b0c2f9"
+							}
+						}
+					],
+					yAxis: [
+						{
+							type: 'value',
+							name: 'Precipitation',
+							min: 0,
+							max: 250,
+							interval: 50,
+							axisLabel: {
+								formatter: '{value} ml',
+								color: "#b0c2f9"
+							}
+						},
+						{
+							type: 'value',
+							name: 'Temperature',
+							min: 0,
+							max: 25,
+							interval: 5,
+							axisLabel: {
+								formatter: '{value} °C',
+								color: "#b0c2f9"
+							}
+						}
+					],
+					series: [
+						{
+							name: 'Evaporation',
+							type: 'bar',
+							tooltip: {
+								valueFormatter: function (value) {
+									return value + ' ml';
+								}
+							},
+							data: [
+								2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
+							]
+						},
+						{
+							name: 'Precipitation',
+							type: 'bar',
+							tooltip: {
+								valueFormatter: function (value) {
+									return value + ' ml';
+								}
+							},
+							data: [
+								2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
+							]
+						},
+						{
+							name: 'Temperature',
+							type: 'line',
+							yAxisIndex: 1,
+							tooltip: {
+								valueFormatter: function (value) {
+									return value + ' °C';
+								}
+							},
+							data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+						}
+					]
+				};
+				// 使用刚指定的配置项和数据显示图表。
+				barMapChart.setOption(option);
+			}
+
+
+			//显示饼图
+			function laodPieType() {
+				// 基于准备好的dom，初始化echarts实例
+				var pieMapChart = echarts.init(document.getElementById('pieMap'));
+
+				// 指定图表的配置项和数据
+				option = {
+					title: {
+						text: '白马街道预警数',
+						subtext: '预警数',
+						left: 'center',
+						color:'yellow'
+					},
+					tooltip: {
+						trigger: 'item'
+					},
+					legend: {
+						orient: 'vertical',
+						left: 'left'
+					},
+					series: [
+						{
+							name: 'Access From',
+							type: 'pie',
+							radius: '50%',
+							data: [
+								{ value: 20, name: '火情报警' },
+								{ value: 14, name: '水域报警' },
+								{ value: 5, name: '渣土车报警' }
+							],
+							emphasis: {
+								itemStyle: {
+									shadowBlur: 10,
+									shadowOffsetX: 0,
+									shadowColor: 'rgba(0, 0, 0, 0.5)'
+								}
+							}
+						}
+					]
+				};
+				// 使用刚指定的配置项和数据显示图表。
+				pieMapChart.setOption(option);
+			}
+
+
+		</script>
+	</body>
+</html>

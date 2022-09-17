@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改短信')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sms-edit" th:object="${sms}">
+            <input name="ID" th:field="*{ID}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">发送者号码：</label>
+                <div class="col-sm-8">
+                    <input name="ADDRESS" th:field="*{ADDRESS}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">发送者时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="sendTime" th:value="${#dates.format(sms.sendTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">发送内容：</label>
+                <div class="col-sm-8">
+                    <textarea name="BODY" class="form-control">[[*{BODY}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否处理：</label>
+                <div class="col-sm-8">
+                    <input name="dealFlag" th:field="*{dealFlag}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">创建人：</label>
+                <div class="col-sm-8">
+                    <input name="createdBy" th:field="*{createdBy}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">创建时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="createdTime" th:value="${#dates.format(sms.createdTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">处理者：</label>
+                <div class="col-sm-8">
+                    <input name="dealBy" th:field="*{dealBy}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">处理时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="dealTime" th:value="${#dates.format(sms.dealTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/sms";
+        $("#form-sms-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-sms-edit').serialize());
+            }
+        }
+
+        $("input[name='sendTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='createdTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='dealTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>
